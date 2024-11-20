@@ -5,12 +5,12 @@ import { InstrumentName, Player } from "soundfont-player";
 
 // Extend the existing NotePitch interface
 
-interface NotePitch {
+export interface NotePitch {
     points: PitchPoint[];
     connectedToNext?: boolean;
 }
 
-interface PitchPoint {
+export interface PitchPoint {
     position: number;  // x position (0-1)
     value: number;    // y value (0-1)
 }

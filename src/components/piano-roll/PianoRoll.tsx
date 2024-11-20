@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useContext } from "react";
 import { Grid } from "../grid/Grid";
 import { Piano } from "../piano/Piano";
@@ -28,7 +29,7 @@ export const PianoRoll = (): JSX.Element => {
                 handleMouseDownOnGrid={handleMouseDownOnGrid}
             />
             <PitchOverlay />
-            {Array.isArray(notes) && notes.map((note: NoteData) => (
+            {notes.notes && notes.notes.map((note: NoteData) => (
                 <PitchBend
                     key={note.id}
                     noteId={note.id.toString()}

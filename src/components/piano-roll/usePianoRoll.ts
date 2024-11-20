@@ -403,10 +403,10 @@ export const usePianoRoll = (
     );
 
     const handlePitchChange = useCallback((noteId: string, newPitch: NotePitch) => {
-        setNotes((prevNotes) => ({
+        setNotes(prevNotes => ({
             ...prevNotes,
-            notes: prevNotes.notes.map((note) => 
-                note.id === noteId 
+            notes: prevNotes.notes.map(note => 
+                note.id.toString() === noteId 
                     ? { ...note, pitch: newPitch }
                     : note
             )

@@ -18,6 +18,12 @@ import {
     makeNewNote,
     getNewID,
 } from "../../utils/util-functions";
+import { 
+    calculateRelativeX, 
+    calculatePitchValue,
+    // ... other imports
+} from "../../utils/util-functions";
+
 
 export const usePianoRoll = (
     noteLength: number,
@@ -347,6 +353,12 @@ export const usePianoRoll = (
                 handleAddNote(newNote);
                 currentNote = newNote;
             });
+            if (e.altKey && note) { // Alt key for pitch editing mode
+                return handlePitchEdit(e, note);
+            }
+
+
+
         },
         [noteLength, snapValue, playing, notes]
     );
@@ -374,6 +386,26 @@ export const usePianoRoll = (
         document.body.style.cursor = cursor;
 
     };
+
+    const handlePitchEdit = useCallback((e: React.MouseEvent, note: NoteData) => {
+        const newPoint = {
+            x: calculateRelativeX(e, note), // Pass both the event and note
+            y: calculatePitchValue(e)
+        };
+        
+        const newNote = {
+            ...note,
+            pitch: {
+                points: [...(note.pitch?.points || []), newPoint]
+            }
+        };
+        
+        handleChangeNote(newNote);
+    }, [handleChangeNote]);
+
+
+
+
     // In usePianoRoll.ts
     const handlePitchBend = useCallback((noteId: string, position: number, value: number) => {
         setNotes((prevNotes: Layer) => {

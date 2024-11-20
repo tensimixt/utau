@@ -258,3 +258,18 @@ export const ellipsized = (str: string, maxLength: number) => {
 
 export const getNewID = () => idGen.next().value as number;
 
+
+// Add to util-functions.ts
+export const calculateRelativeX = (e: React.MouseEvent, note: NoteData): number => {
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    return x / (note.units * NOTE_WIDTH); // Returns value between 0-1
+};
+
+export const calculatePitchValue = (e: React.MouseEvent): number => {
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const y = e.clientY - rect.top;
+    const height = rect.height;
+    // Convert Y position to pitch value between -100 and 100
+    return ((height - y) / height * 200) - 100;
+};

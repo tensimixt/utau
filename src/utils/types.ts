@@ -11,8 +11,8 @@ export type NoteData = {
     selected: boolean;
     pitch?: {
         points: Array<{
-            position: number;
-            value: number;
+            x: number;  // relative position (0-1)
+            y: number;  // pitch value (-100 to 100)
         }>;
     };
 };

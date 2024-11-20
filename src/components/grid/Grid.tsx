@@ -141,7 +141,7 @@ export const Grid = ({
         
         // If connected to next note, draw connection
         if (note.pitch.connectedToNext) {
-            const nextNote = notes.notes.find(n => 
+            const nextNote = notes.notes.find((n: NoteData) => 
                 n.column === note.column + note.units && 
                 n.row === note.row
             );

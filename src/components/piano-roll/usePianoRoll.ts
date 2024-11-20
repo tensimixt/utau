@@ -402,6 +402,17 @@ export const usePianoRoll = (
         [noteLength, snapValue, playing, notes]
     );
 
+    const handlePitchChange = useCallback((noteId: string, newPitch: NotePitch) => {
+        setNotes((prevNotes) => ({
+            ...prevNotes,
+            notes: prevNotes.notes.map((note) => 
+                note.id === noteId 
+                    ? { ...note, pitch: newPitch }
+                    : note
+            )
+        }));
+    }, [setNotes]);
+
     const handleMouseMoveOnGrid = (e: React.MouseEvent) => {
         const { row, col } = getNoteCoordsFromMousePosition(e, {
             pianoRollRef,
@@ -481,6 +492,38 @@ export const usePianoRoll = (
         });
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!e.altKey) return;
+    
+            switch (e.key) {
+                case 'l':
+                    // Change selected point to linear
+                    setNotes(prev => ({
+                        ...prev,
+                        notes: prev.notes.map(note => ({
+                            ...note,
+                            pitch: note.pitch && {
+                                ...note.pitch,
+                                data: note.pitch.data.map(pt => ({
+                                    ...pt,
+                                    shape: PitchPointShape.l
+                                }))
+                            }
+                        }))
+                    }));
+                    break;
+                case 'i':
+                    // Change selected point to sharp in
+                    // Similar implementation for other shapes
+                    break;
+            }
+        };
+    
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [setNotes]);
+
 
     const resizingNote = (col: number, row: number) => {
         const closestNote = notes.notes.find((note: NoteData) => {
@@ -492,6 +535,7 @@ export const usePianoRoll = (
     return {
         handleMouseMoveOnGrid,
         handleMouseDownOnGrid,
+        handlePitchChange,
     };
 };
 

@@ -1,20 +1,18 @@
 
 import { InstrumentName, Player } from "soundfont-player";
 
-interface PitchPoint {
-    x: number;
-    y: number;
-}
+
 
 // Extend the existing NotePitch interface
+
 interface NotePitch {
     points: PitchPoint[];
-    connectedToNext: boolean;
-    vibrato?: {
-        amplitude: number;
-        frequency: number;
-        onset: number;
-    };
+    connectedToNext?: boolean;
+}
+
+interface PitchPoint {
+    position: number;  // x position (0-1)
+    value: number;    // y value (0-1)
 }
 
 export type NoteData = {

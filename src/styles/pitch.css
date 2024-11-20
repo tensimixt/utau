@@ -1,0 +1,13 @@
+/* src/styles/pitch.css */
+.pitch-line {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.pitch-line polyline {
+    transition: stroke 0.2s ease;
+}
+
+.pitch-line:hover polyline {
+    stroke: #64b5f6;
+}

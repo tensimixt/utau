@@ -32,8 +32,10 @@ interface PitchPoint {
     y: number; // pitch offset (-1 to 1)
 }
 
+
 interface NotePitch {
     points: PitchPoint[];
+    connectedToNext?: boolean; // Add this to connect pitches between notes
 }
 
 
@@ -324,6 +326,25 @@ export const usePianoRoll = (
         );
     };
 
+    const handlePitchConnection = useCallback((note: NoteData) => {
+        const nextNote = notes.notes.find(n => 
+            n.column === note.column + note.units && 
+            n.row === note.row
+        );
+        
+        if (nextNote) {
+            // Connect the pitches
+            const updatedNote = {
+                ...note,
+                pitch: {
+                    ...note.pitch,
+                    connectedToNext: true
+                }
+            };
+            handleChangeNote(updatedNote);
+        }
+    }, [notes]);
+
     const handleMouseDownOnGrid = useCallback(
         (e: React.MouseEvent) => {
             const { row, col } = getNoteCoordsFromMousePosition(e, {
@@ -365,14 +386,16 @@ export const usePianoRoll = (
                 handleAddNote(newNote);
                 currentNote = newNote;
             });
-            if (e.altKey && note) { // Alt key for pitch editing mode
-                return handlePitchEdit(e, note);
-            }
+
 
             if (e.altKey && note) {
                 return handlePitchEdit(e, note);
             }
 
+            if (e.altKey && e.shiftKey && note) {
+                return handlePitchConnection(note);
+            }
+            
 
 
         },

@@ -110,6 +110,28 @@ export const Grid = ({
         context.fillText(ellipsized(note.note, maxLength), x + 2, y + 21);
     };
 
+    const drawPitchCurve = (note: NoteData, context: CanvasRenderingContext2D) => {
+        if (!note.pitch?.points) return;
+        
+        const x = note.column * NOTE_WIDTH;
+        const y = (allNotes.length - 1 - note.row) * NOTE_HEIGHT;
+        const width = NOTE_WIDTH * note.units;
+        
+        context.beginPath();
+        context.strokeStyle = '#ff0000';
+        context.lineWidth = 2;
+        
+        note.pitch.points.forEach((point, i) => {
+            const px = x + (width * point.x);
+            const py = y + NOTE_HEIGHT * (1 - (point.y + 100) / 200);
+            
+            if (i === 0) context.moveTo(px, py);
+            else context.lineTo(px, py);
+        });
+        
+        context.stroke();
+    }
+
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();

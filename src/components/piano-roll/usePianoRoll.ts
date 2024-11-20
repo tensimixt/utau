@@ -388,28 +388,15 @@ export const usePianoRoll = (
 
     };
 
-    const handlePitchEdit = useCallback((e: React.MouseEvent, note: NoteData) => {
-        const rect = (e.target as HTMLElement).getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width; // normalized 0-1
-        const y = ((rect.height - (e.clientY - rect.top)) / rect.height) * 200 - 100; // -100 to 100
-    
-        const newPoint = { x, y };
+    const handlePitchEdit = (note: NoteData, mouseX: number, mouseY: number) => {
+        // Add pitch editing logic here
+        const relativeX = (mouseX - note.column * NOTE_WIDTH) / (note.units * NOTE_WIDTH);
+        const relativeY = ((mouseY / NOTE_HEIGHT) * 200) - 100;
         
-        setNotes(prev => ({
-            ...prev,
-            notes: prev.notes.map(n => {
-                if (n.id === note.id) {
-                    return {
-                        ...n,
-                        pitch: {
-                            points: [...(n.pitch?.points || []), newPoint]
-                        }
-                    };
-                }
-                return n;
-            })
-        }));
-    }, [setNotes]);
+        // Update note pitch points
+        if (!note.pitch) note.pitch = { points: [] };
+        note.pitch.points.push({ x: relativeX, y: relativeY });
+    };
 
 
 

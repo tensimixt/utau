@@ -155,7 +155,6 @@ export const makeNewNote = (row: number, col: number, noteLength: number) => {
         pan: 1,
         id: getNewID(),
         selected: false,
-        // Add default pitch data
         pitch: {
             points: [
                 { x: 0, y: 0 },    // start point

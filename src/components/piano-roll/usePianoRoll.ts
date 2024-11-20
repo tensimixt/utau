@@ -358,6 +358,10 @@ export const usePianoRoll = (
                 return handlePitchEdit(e, note);
             }
 
+            if (e.altKey && note) {
+                return handlePitchEdit(e, note);
+            }
+
 
 
         },
@@ -388,15 +392,25 @@ export const usePianoRoll = (
 
     };
 
-    const handlePitchEdit = (note: NoteData, mouseX: number, mouseY: number) => {
-        // Add pitch editing logic here
-        const relativeX = (mouseX - note.column * NOTE_WIDTH) / (note.units * NOTE_WIDTH);
-        const relativeY = ((mouseY / NOTE_HEIGHT) * 200) - 100;
+    const handlePitchEdit = useCallback((e: React.MouseEvent, note: NoteData) => {
+        if (!note.pitch) return;
         
-        // Update note pitch points
-        if (!note.pitch) note.pitch = { points: [] };
-        note.pitch.points.push({ x: relativeX, y: relativeY });
-    };
+        const startPos = getMousePos(e, { pianoRollRef, gridRef });
+        const noteX = note.column * NOTE_WIDTH;
+        const noteWidth = note.units * NOTE_WIDTH;
+        
+        // Convert mouse position to pitch point coordinates
+        const x = (startPos.x - noteX) / noteWidth;
+        const y = Math.max(-1, Math.min(1, (startPos.y % NOTE_HEIGHT - NOTE_HEIGHT/2) / (NOTE_HEIGHT/2)));
+        
+        // Add new pitch point
+        const newPitch = {
+            ...note.pitch,
+            points: [...note.pitch.points, { x, y }].sort((a, b) => a.x - b.x)
+        };
+        
+        handleChangeNote({ ...note, pitch: newPitch });
+    }, [notes]);
 
 
 

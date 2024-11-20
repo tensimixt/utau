@@ -6,9 +6,15 @@ interface PitchPoint {
     y: number;
 }
 
+// Extend the existing NotePitch interface
 interface NotePitch {
     points: PitchPoint[];
-    connectedToNext?: boolean;
+    connectedToNext: boolean;
+    vibrato?: {
+        amplitude: number;
+        frequency: number;
+        onset: number;
+    };
 }
 
 export type NoteData = {

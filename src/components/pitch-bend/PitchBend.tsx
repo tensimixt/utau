@@ -1,18 +1,25 @@
 // src/components/pitch-bend/PitchBend.tsx
 import { useContext } from 'react';
 import { NotesContext } from '../../utils/context';
+import { NOTE_WIDTH, NOTE_HEIGHT } from '../../utils/constants';
+
 
 export const PitchBend = () => {
     const { notes } = useContext(NotesContext);
     
-    const handlePitchBendDraw = (e: React.MouseEvent) => {
-        // Similar to handleMouseMoveOnGrid in usePianoRoll.ts
-        // But for pitch bend points
+// In PitchBend.tsx
+const handlePitchBendDraw = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Add point to pitch curve
+    const newPoint = {
+        position: x / NOTE_WIDTH,
+        value: y / NOTE_HEIGHT
     };
-
-    return (
-        <div className="pitch-bend-container">
-            {/* Render pitch bend canvas/svg here */}
-        </div>
-    );
+    
+    // Update note's pitch points
+    // Implementation needed
+};
 };

@@ -109,32 +109,40 @@ export const Grid = ({
         }
         context.fillText(ellipsized(note.note, maxLength), x + 2, y + 21);
    
-    if (!ghost && note.pitch) {
-        drawPitchCurve(note);
-    }
+        if (!ghost && note.pitch) {
+            drawPitchCurve(note);
+        }
    
     };
 
     const drawPitchCurve = (note: NoteData) => {
-        if (!context || !note.pitch) return;
+        if (!context || !note.pitch?.points.length) return;
         
         const x = note.column * NOTE_WIDTH;
         const y = (allNotes.length - 1 - note.row) * NOTE_HEIGHT;
         const width = NOTE_WIDTH * note.units;
         
-        // Draw pitch line
         context.beginPath();
         context.strokeStyle = 'red';
         context.lineWidth = 2;
         
-        // Start at the first point
-        context.moveTo(x, y + NOTE_HEIGHT/2);
-        
-        // Draw lines between pitch points
-        note.pitch.points.forEach((point) => {
+        // Draw points and connect them
+        note.pitch.points.forEach((point, i) => {
             const pointX = x + (width * point.x);
-            const pointY = y + NOTE_HEIGHT/2 + (point.y * NOTE_HEIGHT/2);
-            context.lineTo(pointX, pointY);
+            const pointY = y + NOTE_HEIGHT/2 - (point.y * NOTE_HEIGHT/2);
+            
+            if (i === 0) {
+                context.moveTo(pointX, pointY);
+            } else {
+                context.lineTo(pointX, pointY);
+            }
+            
+            // Draw point markers
+            context.fillStyle = 'white';
+            context.beginPath();
+            context.arc(pointX, pointY, 4, 0, Math.PI * 2);
+            context.fill();
+            context.stroke();
         });
         
         context.stroke();

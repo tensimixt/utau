@@ -26,6 +26,17 @@ import {
 } from "../../utils/util-functions";
 
 
+
+interface PitchPoint {
+    x: number; // position within note (0-1)
+    y: number; // pitch offset (-1 to 1)
+}
+
+interface NotePitch {
+    points: PitchPoint[];
+}
+
+
 export const usePianoRoll = (
     noteLength: number,
     setNoteLength: (length: number) => void
@@ -393,20 +404,31 @@ export const usePianoRoll = (
     };
 
     const handlePitchEdit = useCallback((e: React.MouseEvent, note: NoteData) => {
-        if (!note.pitch) return;
-        
+        if (!note.pitch) {
+            note.pitch = {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 }
+                ]
+            };
+        }
+    
         const startPos = getMousePos(e, { pianoRollRef, gridRef });
         const noteX = note.column * NOTE_WIDTH;
         const noteWidth = note.units * NOTE_WIDTH;
         
-        // Convert mouse position to pitch point coordinates
+        // Convert mouse position to relative coordinates
         const x = (startPos.x - noteX) / noteWidth;
-        const y = Math.max(-1, Math.min(1, (startPos.y % NOTE_HEIGHT - NOTE_HEIGHT/2) / (NOTE_HEIGHT/2)));
+        const y = Math.max(-1, Math.min(1, 
+            ((allNotes.length - 1 - note.row) * NOTE_HEIGHT + NOTE_HEIGHT/2 - startPos.y) 
+            / (NOTE_HEIGHT/2)
+        ));
         
-        // Add new pitch point
+        // Add new point
         const newPitch = {
             ...note.pitch,
-            points: [...note.pitch.points, { x, y }].sort((a, b) => a.x - b.x)
+            points: [...note.pitch.points, { x, y }]
+                .sort((a, b) => a.x - b.x) // Sort points by x position
         };
         
         handleChangeNote({ ...note, pitch: newPitch });

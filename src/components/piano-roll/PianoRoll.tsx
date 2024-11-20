@@ -4,6 +4,8 @@ import { Piano } from "../piano/Piano";
 import { Selection } from "../selection/Selection";
 import { usePianoRoll } from "./usePianoRoll";
 import { DEFAULT_NOTE_LENGTH } from "../../utils/constants";
+import { PitchBend } from '../pitch-bend/PitchBend';
+
 
 export const PianoRoll = (): JSX.Element => {
     const [noteLength, setNoteLength] = useState<number>(DEFAULT_NOTE_LENGTH);
@@ -20,6 +22,7 @@ export const PianoRoll = (): JSX.Element => {
                 handleMouseMoveOnGrid={handleMouseMoveOnGrid}
                 handleMouseDownOnGrid={handleMouseDownOnGrid}
             />
+            <PitchBend /> {/* Add this */}
         </>
     );
 };

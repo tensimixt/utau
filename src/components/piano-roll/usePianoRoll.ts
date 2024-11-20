@@ -234,6 +234,8 @@ export const usePianoRoll = (
         [snapValue, handleChangeNote]
     );
 
+    
+
     const handleSelectNotesInBox = useCallback(
         (e: React.MouseEvent, shiftKey: boolean) => {
             const startPos = getNoteCoordsFromMousePosition(e, {
@@ -372,6 +374,27 @@ export const usePianoRoll = (
         document.body.style.cursor = cursor;
 
     };
+    // In usePianoRoll.ts
+    const handlePitchBend = useCallback((noteId: string, position: number, value: number) => {
+        setNotes((prevNotes: Layer) => {
+            return {
+                ...prevNotes,
+                notes: prevNotes.notes.map((note: NoteData) => {
+                    // Fix: Convert noteId to string if note.id is a number, or vice versa
+                    if (note.id.toString() === noteId) { // or use: if (String(note.id) === noteId)
+                        return {
+                            ...note,
+                            pitch: {
+                                points: [...(note.pitch?.points || []), { position, value }]
+                            }
+                        };
+                    }
+                    return note;
+                })
+            };
+        });
+    }, []);
+
 
     const resizingNote = (col: number, row: number) => {
         const closestNote = notes.notes.find((note: NoteData) => {

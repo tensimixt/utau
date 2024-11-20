@@ -9,6 +9,12 @@ export type NoteData = {
     pan: number;
     id: number;
     selected: boolean;
+    pitch?: {
+        points: Array<{
+            position: number;
+            value: number;
+        }>;
+    };
 };
 export type Position = {
     x: number;

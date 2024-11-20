@@ -1,4 +1,15 @@
+
 import { InstrumentName, Player } from "soundfont-player";
+
+interface PitchPoint {
+    x: number;
+    y: number;
+}
+
+interface NotePitch {
+    points: PitchPoint[];
+    connectedToNext?: boolean;
+}
 
 export type NoteData = {
     row: number;
@@ -9,12 +20,7 @@ export type NoteData = {
     pan: number;
     id: number;
     selected: boolean;
-    pitch?: {
-        points: Array<{
-            x: number;  // relative position (0-1)
-            y: number;  // pitch value (-100 to 100)
-        }>;
-    };
+    pitch?: NotePitch;
 };
 export type Position = {
     x: number;
